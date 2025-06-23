@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 1,
+    "title": "Complete quarterly budget review",
+    "description": "Review Q4 expenses and prepare budget allocation for next quarter",
+    "completed": false,
+    "priority": "high",
+    "category": "work",
+    "dueDate": "2024-01-15",
+    "createdAt": "2024-01-10T09:00:00Z"
+  },
+  {
+    "Id": 2,
+    "title": "Schedule dentist appointment",
+    "description": "Book routine cleaning and checkup",
+    "completed": false,
+    "priority": "medium",
+    "category": "personal",
+    "dueDate": "2024-01-20",
+    "createdAt": "2024-01-08T14:30:00Z"
+  },
+  {
+    "Id": 3,
+    "title": "Buy groceries for the week",
+    "description": "Milk, bread, eggs, vegetables, and household supplies",
+    "completed": true,
+    "priority": "low",
+    "category": "shopping",
+    "dueDate": "2024-01-12",
+    "createdAt": "2024-01-11T08:15:00Z"
+  },
+  {
+    "Id": 4,
+    "title": "Prepare client presentation slides",
+    "description": "Create slides for Friday's product demo meeting",
+    "completed": false,
+    "priority": "high",
+    "category": "work",
+    "dueDate": "2024-01-14",
+    "createdAt": "2024-01-09T11:45:00Z"
+  },
+  {
+    "Id": 5,
+    "title": "Go for evening run",
+    "description": "30-minute cardio session in the park",
+    "completed": false,
+    "priority": "medium",
+    "category": "fitness",
+    "dueDate": "2024-01-13",
+    "createdAt": "2024-01-13T07:00:00Z"
+  }
+]

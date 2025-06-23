@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import react-toastify CSS */
+@import 'react-toastify/dist/ReactToastify.css';
+
+/* Ensure scrollbars are visible */
+body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Prevent horizontal overflow */
+* {
+  max-width: 100%;
+}
+
+/* Main content areas must allow scroll */
+.main-content {
+  overflow-y: auto;
+  height: 100vh;
+}
+
+@layer utilities {
+  /* Only use scrollbar-hide for specific UI elements, never main content */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom checkbox styling */
+.custom-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.custom-checkbox:checked {
+  background-color: #5B4FE9;
+  border-color: #5B4FE9;
+}
+
+.custom-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  animation: checkmark-draw 0.3s ease-out;
+}
+
+/* Priority dot pulse animation */
+.priority-high {
+  animation: pulse-priority 2s infinite;
+}
+
+/* Task completion fade */
+.task-completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Category color indicators */
+.category-work { background-color: #5B4FE9; }
+.category-personal { background-color: #4CAF50; }
+.category-shopping { background-color: #FF9800; }
+.category-fitness { background-color: #F44336; }
+.category-learning { background-color: #2196F3; }
+.category-default { background-color: #94a3b8; }
