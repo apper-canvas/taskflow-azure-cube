@@ -11,9 +11,10 @@ const TaskCard = ({
   onDelete,
   className = '' 
 }) => {
-  const { Id, title, description, completed, priority, category, dueDate } = task;
-  
-  const dueDateObj = parseISO(dueDate);
+const { Id, title, Name, description, completed, priority, category, due_date, dueDate } = task;
+const taskTitle = title || Name;
+  const taskDueDate = due_date || dueDate;
+  const dueDateObj = parseISO(taskDueDate);
   const isOverdue = isPast(dueDateObj) && !isToday(dueDateObj) && !completed;
   const isDueToday = isToday(dueDateObj);
 
@@ -70,9 +71,9 @@ const TaskCard = ({
               style={{ backgroundColor: getPriorityColor(priority) }}
             />
             
-            {/* Title */}
+{/* Title */}
             <h3 className={`font-medium text-gray-900 ${completed ? 'line-through opacity-60' : ''}`}>
-              {title}
+              {taskTitle}
             </h3>
           </div>
 

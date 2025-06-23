@@ -1,89 +1,304 @@
-import taskData from '../mockData/tasks.json';
+const { ApperClient } = window.ApperSDK;
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-let tasks = [...taskData];
+const apperClient = new ApperClient({
+  apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+  apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+});
 
 export const taskService = {
   async getAll() {
-    await delay(200);
-    return [...tasks];
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "description" } },
+          { field: { Name: "completed" } },
+          { field: { Name: "priority" } },
+          { field: { Name: "due_date" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "category" } }
+        ],
+        orderBy: [
+          { fieldName: "created_at", sorttype: "DESC" }
+        ]
+      };
+      
+      const response = await apperClient.fetchRecords('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      throw error;
+    }
   },
 
   async getById(id) {
-    await delay(150);
-    const task = tasks.find(t => t.Id === parseInt(id, 10));
-    if (!task) {
-      throw new Error('Task not found');
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "description" } },
+          { field: { Name: "completed" } },
+          { field: { Name: "priority" } },
+          { field: { Name: "due_date" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "category" } }
+        ]
+      };
+      
+      const response = await apperClient.getRecordById('task', parseInt(id, 10), params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching task with ID ${id}:`, error);
+      throw error;
     }
-    return { ...task };
   },
 
   async create(taskData) {
-    await delay(300);
-    const newTask = {
-      Id: Math.max(...tasks.map(t => t.Id), 0) + 1,
-      ...taskData,
-      completed: false,
-      createdAt: new Date().toISOString()
-    };
-    tasks.push(newTask);
-    return { ...newTask };
+    try {
+      const params = {
+        records: [{
+          Name: taskData.title,
+          title: taskData.title,
+          description: taskData.description || '',
+          completed: false,
+          priority: taskData.priority,
+          due_date: taskData.dueDate,
+          created_at: new Date().toISOString(),
+          category: taskData.category
+        }]
+      };
+      
+      const response = await apperClient.createRecord('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          throw new Error(failedRecords[0].message || 'Failed to create task');
+        }
+        
+        return successfulRecords[0].data;
+      }
+    } catch (error) {
+      console.error("Error creating task:", error);
+      throw error;
+    }
   },
 
   async update(id, updateData) {
-    await delay(250);
-    const index = tasks.findIndex(t => t.Id === parseInt(id, 10));
-    if (index === -1) {
-      throw new Error('Task not found');
+    try {
+      const params = {
+        records: [{
+          Id: parseInt(id, 10),
+          ...(updateData.title && { Name: updateData.title, title: updateData.title }),
+          ...(updateData.description !== undefined && { description: updateData.description }),
+          ...(updateData.completed !== undefined && { completed: updateData.completed }),
+          ...(updateData.priority && { priority: updateData.priority }),
+          ...(updateData.dueDate && { due_date: updateData.dueDate }),
+          ...(updateData.category && { category: updateData.category })
+        }]
+      };
+      
+      const response = await apperClient.updateRecord('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
+          throw new Error(failedUpdates[0].message || 'Failed to update task');
+        }
+        
+        return successfulUpdates[0].data;
+      }
+    } catch (error) {
+      console.error("Error updating task:", error);
+      throw error;
     }
-    
-    const updatedTask = {
-      ...tasks[index],
-      ...updateData,
-      Id: tasks[index].Id // Prevent ID modification
-    };
-    tasks[index] = updatedTask;
-    return { ...updatedTask };
   },
 
   async delete(id) {
-    await delay(200);
-    const index = tasks.findIndex(t => t.Id === parseInt(id, 10));
-    if (index === -1) {
-      throw new Error('Task not found');
+    try {
+      const params = {
+        RecordIds: [parseInt(id, 10)]
+      };
+      
+      const response = await apperClient.deleteRecord('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      throw error;
     }
-    tasks.splice(index, 1);
-    return true;
   },
 
   async toggleComplete(id) {
-    await delay(150);
-    const task = tasks.find(t => t.Id === parseInt(id, 10));
-    if (!task) {
-      throw new Error('Task not found');
+    try {
+      // First get the current task
+      const task = await this.getById(id);
+      
+      // Toggle the completed status
+      const updatedTask = await this.update(id, { completed: !task.completed });
+      
+      return updatedTask;
+    } catch (error) {
+      console.error("Error toggling task completion:", error);
+      throw error;
     }
-    task.completed = !task.completed;
-    return { ...task };
   },
 
   async getByCategory(category) {
-    await delay(200);
-    return tasks.filter(t => t.category === category).map(t => ({ ...t }));
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "description" } },
+          { field: { Name: "completed" } },
+          { field: { Name: "priority" } },
+          { field: { Name: "due_date" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "category" } }
+        ],
+        where: [
+          { FieldName: "category", Operator: "EqualTo", Values: [category] }
+        ]
+      };
+      
+      const response = await apperClient.fetchRecords('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching tasks by category:", error);
+      throw error;
+    }
   },
 
   async getByPriority(priority) {
-    await delay(200);
-    return tasks.filter(t => t.priority === priority).map(t => ({ ...t }));
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "description" } },
+          { field: { Name: "completed" } },
+          { field: { Name: "priority" } },
+          { field: { Name: "due_date" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "category" } }
+        ],
+        where: [
+          { FieldName: "priority", Operator: "EqualTo", Values: [priority] }
+        ]
+      };
+      
+      const response = await apperClient.fetchRecords('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching tasks by priority:", error);
+      throw error;
+    }
   },
 
   async searchTasks(query) {
-    await delay(300);
-    const lowercaseQuery = query.toLowerCase();
-    return tasks.filter(t => 
-      t.title.toLowerCase().includes(lowercaseQuery) ||
-      t.description.toLowerCase().includes(lowercaseQuery)
-    ).map(t => ({ ...t }));
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "title" } },
+          { field: { Name: "description" } },
+          { field: { Name: "completed" } },
+          { field: { Name: "priority" } },
+          { field: { Name: "due_date" } },
+          { field: { Name: "created_at" } },
+          { field: { Name: "category" } }
+        ],
+        whereGroups: [{
+          operator: "OR",
+          subGroups: [
+            {
+              conditions: [{
+                fieldName: "Name",
+                operator: "Contains",
+                values: [query]
+              }],
+              operator: "OR"
+            },
+            {
+              conditions: [{
+                fieldName: "title",
+                operator: "Contains",
+                values: [query]
+              }],
+              operator: "OR"
+            },
+            {
+              conditions: [{
+                fieldName: "description",
+                operator: "Contains",
+                values: [query]
+              }],
+              operator: "OR"
+            }
+          ]
+        }]
+      };
+      
+      const response = await apperClient.fetchRecords('task', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error searching tasks:", error);
+      throw error;
+    }
   }
 };
 

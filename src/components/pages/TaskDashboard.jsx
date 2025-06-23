@@ -81,25 +81,25 @@ const TaskDashboard = () => {
     let filtered = searchQuery ? searchResults : tasks;
 
     // Filter by category
-    if (activeCategory) {
+if (activeCategory) {
       filtered = filtered.filter(task => task.category === activeCategory);
     }
 
     // Filter by quick filters
     switch (activeFilter) {
-      case 'today':
-        filtered = filtered.filter(task => isToday(parseISO(task.dueDate)));
+case 'today':
+        filtered = filtered.filter(task => isToday(parseISO(task.due_date)));
         break;
-      case 'week':
-        filtered = filtered.filter(task => isThisWeek(parseISO(task.dueDate)));
+case 'week':
+        filtered = filtered.filter(task => isThisWeek(parseISO(task.due_date)));
         break;
       case 'high':
         filtered = filtered.filter(task => task.priority === 'high');
         break;
-      case 'overdue':
+case 'overdue':
         filtered = filtered.filter(task => 
-          isPast(parseISO(task.dueDate)) && 
-          !isToday(parseISO(task.dueDate)) && 
+          isPast(parseISO(task.due_date)) && 
+          !isToday(parseISO(task.due_date)) && 
           !task.completed
         );
         break;
@@ -110,21 +110,21 @@ const TaskDashboard = () => {
     // Sort: incomplete tasks first, then by due date
     return filtered.sort((a, b) => {
       if (a.completed !== b.completed) {
-        return a.completed ? 1 : -1;
+return a.completed ? 1 : -1;
       }
-      return new Date(a.dueDate) - new Date(b.dueDate);
+      return new Date(a.due_date) - new Date(b.due_date);
     });
   }, [tasks, searchResults, searchQuery, activeCategory, activeFilter]);
 
   // Task count calculations
   const taskCounts = useMemo(() => {
-    const all = tasks.length;
-    const today = tasks.filter(task => isToday(parseISO(task.dueDate))).length;
-    const week = tasks.filter(task => isThisWeek(parseISO(task.dueDate))).length;
+const all = tasks.length;
+    const today = tasks.filter(task => isToday(parseISO(task.due_date))).length;
+    const week = tasks.filter(task => isThisWeek(parseISO(task.due_date))).length;
     const high = tasks.filter(task => task.priority === 'high').length;
-    const overdue = tasks.filter(task => 
-      isPast(parseISO(task.dueDate)) && 
-      !isToday(parseISO(task.dueDate)) && 
+const overdue = tasks.filter(task => 
+      isPast(parseISO(task.due_date)) && 
+      !isToday(parseISO(task.due_date)) && 
       !task.completed
     ).length;
 

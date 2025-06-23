@@ -11,12 +11,12 @@ const TaskForm = ({
   categories = [],
   loading = false 
 }) => {
-  const [formData, setFormData] = useState({
-    title: initialData?.title || '',
+const [formData, setFormData] = useState({
+    title: initialData?.title || initialData?.Name || '',
     description: initialData?.description || '',
     priority: initialData?.priority || 'medium',
     category: initialData?.category || '',
-    dueDate: initialData?.dueDate || new Date().toISOString().split('T')[0]
+    dueDate: initialData?.due_date || initialData?.dueDate || new Date().toISOString().split('T')[0]
   });
 
   const [errors, setErrors] = useState({});
@@ -61,9 +61,9 @@ const TaskForm = ({
     { value: 'high', label: 'High Priority' }
   ];
 
-  const categoryOptions = categories.map(cat => ({
-    value: cat.name.toLowerCase(),
-    label: cat.name
+const categoryOptions = categories.map(cat => ({
+    value: cat.Name ? cat.Name.toLowerCase() : cat.name.toLowerCase(),
+    label: cat.Name || cat.name
   }));
 
   return (
