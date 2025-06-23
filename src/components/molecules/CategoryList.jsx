@@ -38,7 +38,7 @@ const CategoryList = ({
         
         <div className="space-y-1">
           {/* All Categories */}
-          <motion.button
+<motion.button
             variants={itemVariants}
             whileHover={{ scale: 1.02, backgroundColor: '#f8fafc' }}
             whileTap={{ scale: 0.98 }}
@@ -52,7 +52,7 @@ const CategoryList = ({
               <span>All Categories</span>
             </div>
             <Badge size="small" variant={!activeCategory ? 'primary' : 'default'}>
-              {categories.reduce((sum, cat) => sum + cat.taskCount, 0)}
+              {categories.reduce((sum, cat) => sum + (cat.task_count || 0), 0)}
             </Badge>
           </motion.button>
 
@@ -63,9 +63,9 @@ const CategoryList = ({
               variants={itemVariants}
               whileHover={{ scale: 1.02, backgroundColor: '#f8fafc' }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onCategorySelect(category.name.toLowerCase())}
+              onClick={() => onCategorySelect(category.Name?.toLowerCase())}
               className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-all duration-200 ${
-                activeCategory === category.name.toLowerCase() 
+                activeCategory === category.Name?.toLowerCase() 
                   ? 'bg-primary/10 text-primary' 
                   : 'text-gray-700 hover:bg-gray-50'
               }`}
@@ -75,14 +75,14 @@ const CategoryList = ({
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: category.color }}
                 />
-                <span className="capitalize">{category.name}</span>
+                <span className="capitalize">{category.Name}</span>
               </div>
-              {category.taskCount > 0 && (
+              {(category.task_count || 0) > 0 && (
                 <Badge 
                   size="small" 
-                  variant={activeCategory === category.name.toLowerCase() ? 'primary' : 'default'}
+                  variant={activeCategory === category.Name?.toLowerCase() ? 'primary' : 'default'}
                 >
-                  {category.taskCount}
+                  {category.task_count}
                 </Badge>
               )}
             </motion.button>
