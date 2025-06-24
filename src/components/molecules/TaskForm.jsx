@@ -16,7 +16,8 @@ const [formData, setFormData] = useState({
     description: initialData?.description || '',
     priority: initialData?.priority || 'medium',
     category: initialData?.category || '',
-    dueDate: initialData?.due_date || initialData?.dueDate || new Date().toISOString().split('T')[0]
+    dueDate: initialData?.due_date || initialData?.dueDate || new Date().toISOString().split('T')[0],
+    phone: initialData?.phone || ''
   });
 
   const [errors, setErrors] = useState({});
@@ -81,8 +82,16 @@ const categoryOptions = categories.map(cat => ({
         error={errors.title}
         disabled={loading}
         icon="CheckSquare"
-      />
+/>
 
+      <Input
+        label="Phone"
+        placeholder="Enter phone number"
+        value={formData.phone}
+        onChange={(e) => handleChange('phone', e.target.value)}
+        disabled={loading}
+        icon="Phone"
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Select
           label="Category"

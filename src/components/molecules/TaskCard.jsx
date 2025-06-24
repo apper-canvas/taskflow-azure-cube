@@ -11,7 +11,7 @@ const TaskCard = ({
   onDelete,
   className = '' 
 }) => {
-const { Id, title, Name, description, completed, priority, category, due_date, dueDate } = task;
+const { Id, title, Name, description, completed, priority, category, due_date, dueDate, phone } = task;
 const taskTitle = title || Name;
   const taskDueDate = due_date || dueDate;
   const dueDateObj = parseISO(taskDueDate);
@@ -117,7 +117,15 @@ const taskTitle = title || Name;
               size="small"
             >
               {priority}
-            </Badge>
+</Badge>
+
+            {/* Phone */}
+            {phone && (
+              <div className="flex items-center gap-1 text-xs text-gray-500">
+                <ApperIcon name="Phone" className="w-3 h-3" />
+                <span>{phone}</span>
+              </div>
+            )}
           </div>
         </div>
 

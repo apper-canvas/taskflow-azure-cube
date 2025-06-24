@@ -9,7 +9,7 @@ export const taskService = {
   async getAll() {
     try {
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "title" } },
           { field: { Name: "description" } },
@@ -17,7 +17,8 @@ export const taskService = {
           { field: { Name: "priority" } },
           { field: { Name: "due_date" } },
           { field: { Name: "created_at" } },
-          { field: { Name: "category" } }
+          { field: { Name: "category" } },
+          { field: { Name: "phone" } }
         ],
         orderBy: [
           { fieldName: "created_at", sorttype: "DESC" }
@@ -41,7 +42,7 @@ export const taskService = {
   async getById(id) {
     try {
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "title" } },
           { field: { Name: "description" } },
@@ -49,7 +50,8 @@ export const taskService = {
           { field: { Name: "priority" } },
           { field: { Name: "due_date" } },
           { field: { Name: "created_at" } },
-          { field: { Name: "category" } }
+          { field: { Name: "category" } },
+          { field: { Name: "phone" } }
         ]
       };
       
@@ -69,7 +71,7 @@ export const taskService = {
 
   async create(taskData) {
     try {
-      const params = {
+const params = {
         records: [{
           Name: taskData.title,
           title: taskData.title,
@@ -78,7 +80,8 @@ export const taskService = {
           priority: taskData.priority,
           due_date: taskData.dueDate,
           created_at: new Date().toISOString(),
-          category: taskData.category
+          category: taskData.category,
+          phone: taskData.phone || ''
         }]
       };
       
@@ -108,7 +111,7 @@ export const taskService = {
 
   async update(id, updateData) {
     try {
-      const params = {
+const params = {
         records: [{
           Id: parseInt(id, 10),
           ...(updateData.title && { Name: updateData.title, title: updateData.title }),
@@ -116,7 +119,8 @@ export const taskService = {
           ...(updateData.completed !== undefined && { completed: updateData.completed }),
           ...(updateData.priority && { priority: updateData.priority }),
           ...(updateData.dueDate && { due_date: updateData.dueDate }),
-          ...(updateData.category && { category: updateData.category })
+          ...(updateData.category && { category: updateData.category }),
+          ...(updateData.phone !== undefined && { phone: updateData.phone })
         }]
       };
       
@@ -182,7 +186,7 @@ export const taskService = {
   async getByCategory(category) {
     try {
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "title" } },
           { field: { Name: "description" } },
@@ -190,7 +194,8 @@ export const taskService = {
           { field: { Name: "priority" } },
           { field: { Name: "due_date" } },
           { field: { Name: "created_at" } },
-          { field: { Name: "category" } }
+          { field: { Name: "category" } },
+          { field: { Name: "phone" } }
         ],
         where: [
           { FieldName: "category", Operator: "EqualTo", Values: [category] }
@@ -214,7 +219,7 @@ export const taskService = {
   async getByPriority(priority) {
     try {
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "title" } },
           { field: { Name: "description" } },
@@ -222,7 +227,8 @@ export const taskService = {
           { field: { Name: "priority" } },
           { field: { Name: "due_date" } },
           { field: { Name: "created_at" } },
-          { field: { Name: "category" } }
+          { field: { Name: "category" } },
+          { field: { Name: "phone" } }
         ],
         where: [
           { FieldName: "priority", Operator: "EqualTo", Values: [priority] }
@@ -246,7 +252,7 @@ export const taskService = {
   async searchTasks(query) {
     try {
       const params = {
-        fields: [
+fields: [
           { field: { Name: "Name" } },
           { field: { Name: "title" } },
           { field: { Name: "description" } },
@@ -254,7 +260,8 @@ export const taskService = {
           { field: { Name: "priority" } },
           { field: { Name: "due_date" } },
           { field: { Name: "created_at" } },
-          { field: { Name: "category" } }
+          { field: { Name: "category" } },
+          { field: { Name: "phone" } }
         ],
         whereGroups: [{
           operator: "OR",
